@@ -1,0 +1,49 @@
+﻿@page "/products"
+
+@if (Products != null)
+{
+    <h3>Product:</h3>
+    <select @onchange="ProductSelected" size="1" style="width:10%">
+        @foreach (var product in Products)
+        {
+            <option value="@product.Id.ToString()">@product.Name - $@product.Price</option>
+        }
+    </select>
+
+    if (SelectedProduct != null)
+    {
+        <br />
+        <div>Selected Product: @SelectedProduct.Name</div>
+    }
+}
+
+@code {
+    private List<Product> Products;
+
+    Product SelectedProduct;
+
+    void ProductSelected(ChangeEventArgs args)
+    {
+        SelectedProduct = (from p in Products where p.Id == Convert.ToInt32(args.Value.ToString()) select p).FirstOrDefault();
+    }
+
+
+    protected override void OnInitialized()
+    {
+        Products = new List<Product>
+        {
+            new Product{Id = 1, Name = "Phone", Price = 999.99m},
+            new Product{Id = 2, Name = "Book", Price = 5.99m},
+            new Product{Id = 3, Name = "Car", Price = 19999.99m}
+        };
+    }
+
+    public class Product
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public decimal Price { get; set; }
+    }
+}
